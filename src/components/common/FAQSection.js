@@ -50,7 +50,7 @@ const FAQItem = ({ faq, isOpen, onToggle }) => {
         <div className="faq-item">
             <button
                 onClick={onToggle}
-                className="faq-trigger focus-visible-ring group flex w-full items-center justify-between py-4 text-left"
+                className="faq-trigger focus-visible-ring group flex w-full items-center justify-between py-4 px-6 text-left"
                 aria-expanded={isOpen}
             >
                 <span className="flex-1 text-left">{faq.question}</span>
@@ -70,7 +70,7 @@ const FAQItem = ({ faq, isOpen, onToggle }) => {
                         transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="faq-content"
                     >
-                        <div className="pb-4 pr-12 text-gray-600">
+                        <div className="pb-4 px-6 pr-12 text-gray-600">
                             {faq.answer}
                         </div>
                     </motion.div>
