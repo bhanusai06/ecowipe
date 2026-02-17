@@ -175,11 +175,33 @@ const Navigation = () => {
                                         {item.name}
                                     </Link>
                                 ))}
-                                <Link to="/wipe" className="block">
-                                    <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl">
-                                        Start Wipe
-                                    </Button>
-                                </Link>
+                                {user ? (
+                                    <div className="pt-4 mt-4 border-t border-gray-100">
+                                        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl mb-3">
+                                            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 flex items-center justify-center shadow-sm shrink-0">
+                                                <User className="w-5 h-5 text-white" />
+                                            </div>
+                                            <div className="flex flex-col overflow-hidden">
+                                                <span className="text-sm font-semibold text-gray-900">Signed in as</span>
+                                                <span className="text-xs text-gray-500 truncate" title={user.email}>{user.email}</span>
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 active:bg-red-200 transition-colors rounded-xl"
+                                        >
+                                            <LogOut className="w-4 h-4" />
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <Link to="/wipe" className="block pt-2">
+                                        <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl shadow-md">
+                                            Start Wipe
+                                        </Button>
+                                    </Link>
+                                )}
                             </div>
                         </motion.div>
                     )}
