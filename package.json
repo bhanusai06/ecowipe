@@ -18,6 +18,7 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
+    "postbuild": "cp build/index.html build/404.html",
     "deploy": "gh-pages -d build"
   },
   "keywords": [],

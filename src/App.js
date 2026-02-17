@@ -24,7 +24,7 @@ import ProofUploadPage from './pages/wipe/ProofUploadPage';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/e-waste">
       <WipeWorkflowProvider>
         <Routes>
           {/* Marketing Pages with Navigation */}
