@@ -23,17 +23,11 @@ const FloatingInput = ({ type, name, value, onChange, placeholder, icon: Icon, r
                 name={name}
                 value={value}
                 onChange={onChange}
-                required={required}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                className={`
-          w-full bg-[#1e293b]/50 border-b-2 
-          ${isFocused ? 'border-emerald-500' : 'border-gray-700'} 
-          ${isFocused ? 'bg-[#1e293b]/80' : 'bg-[#1e293b]/50'}
-          text-white px-12 py-4 outline-none transition-all duration-300
-          placeholder-transparent rounded-t-lg
-        `}
+                className="w-full bg-transparent border-2 border-gray-700 rounded-lg px-12 py-3 text-white placeholder-transparent focus:outline-none focus:border-emerald-400 transition-all duration-300"
                 placeholder={placeholder}
+                required={required}
             />
 
             <label
