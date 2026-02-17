@@ -17,6 +17,7 @@ import {
 import { WipeRecord } from "../entities/WipeRecord";
 import { User } from "../entities/User";
 import { format } from "date-fns";
+import { useAuth } from "../context/AuthContext";
 // import { HoverCard, HoverCardContent, HoverCardTrigger } from "../components/ui/hover-card";
 
 
@@ -52,8 +53,6 @@ const BadgeDisplay = ({ badgeKey }) => {
     </div>
   );
 }
-
-import { useAuth } from "../context/AuthContext";
 
 export default function DashboardPage() {
   const [wipeRecords, setWipeRecords] = useState([]);
