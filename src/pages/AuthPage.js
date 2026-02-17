@@ -251,11 +251,106 @@ const AuthPage = () => {
 
     return (
         <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-            className="min-h-screen w-full flex bg-[#0f172a] text-white overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="min-h-screen w-full flex bg-[#0f172a] text-white overflow-hidden relative"
         >
+            {/* Mobile Background Animations - show on all screens */}
+            <div className="lg:hidden absolute inset-0 overflow-hidden pointer-events-none z-0">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-black/80" />
+                {/* Mobile Floating Leaves */}
+                {[...Array(8)].map((_, i) => (
+                    <motion.div
+                        key={`mobile-leaf-${i}`}
+                        initial={{
+                            x: Math.random() * 100 - 50,
+                            y: -20,
+                            rotate: Math.random() * 360,
+                            opacity: 0
+                        }}
+                        animate={{
+                            x: [
+                                Math.random() * 100 - 50,
+                                Math.random() * 100 - 50 + Math.sin(i) * 60,
+                                Math.random() * 100 - 50
+                            ],
+                            y: [
+                                -20,
+                                '50vh',
+                                '110vh'
+                            ],
+                            rotate: [
+                                Math.random() * 360,
+                                Math.random() * 360 + 180,
+                                Math.random() * 360 + 360
+                            ],
+                            opacity: [0, 0.5, 0]
+                        }}
+                        transition={{
+                            duration: 12 + Math.random() * 6,
+                            repeat: Infinity,
+                            delay: i * 1.5,
+                            ease: "linear"
+                        }}
+                        style={{
+                            position: 'absolute',
+                            left: `${(i * 12) % 100}%`,
+                        }}
+                    >
+                        <Leaf
+                            size={18 + Math.random() * 12}
+                            className="text-emerald-400/50"
+                            style={{
+                                filter: 'drop-shadow(0 0 8px rgba(52, 211, 153, 0.4))'
+                            }}
+                        />
+                    </motion.div>
+                ))}
+                {/* Mobile Rising Particles */}
+                {[...Array(10)].map((_, i) => (
+                    <motion.div
+                        key={`mobile-particle-${i}`}
+                        initial={{
+                            x: Math.random() * window.innerWidth,
+                            y: '110vh',
+                            scale: 0,
+                            opacity: 0
+                        }}
+                        animate={{
+                            x: [
+                                Math.random() * window.innerWidth,
+                                Math.random() * window.innerWidth + Math.cos(i) * 50,
+                                Math.random() * window.innerWidth
+                            ],
+                            y: [
+                                '110vh',
+                                '50vh',
+                                '-20px'
+                            ],
+                            scale: [0, 1, 0],
+                            opacity: [0, 0.7, 0]
+                        }}
+                        transition={{
+                            duration: 10 + Math.random() * 5,
+                            repeat: Infinity,
+                            delay: i * 1,
+                            ease: "easeOut"
+                        }}
+                        style={{
+                            position: 'absolute',
+                        }}
+                    >
+                        <div
+                            className="w-2 h-2 rounded-full bg-cyan-400/70"
+                            style={{
+                                boxShadow: '0 0 10px rgba(34, 211, 238, 0.7)',
+                            }}
+                        />
+                    </motion.div>
+                ))}
+            </div>
+
             {/* LEFT PANEL: Cinematic Visuals */}
             <div className="hidden lg:flex w-1/2 relative flex-col justify-between items-center p-12 bg-gray-900 overflow-hidden">
                 <div className="absolute inset-0 z-0">
@@ -501,8 +596,8 @@ const AuthPage = () => {
             </div>
 
             {/* RIGHT PANEL: Professional Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-24 relative">
-                <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-emerald-900/20 to-[#0f172a] z-0" />
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative z-10"
+            >    <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-emerald-900/20 to-[#0f172a] z-0" />
 
                 <motion.div
                     variants={formVariants}
