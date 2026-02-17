@@ -20,6 +20,7 @@ connectDB();
 const allowedOrigins = [
   'http://localhost:3000',
   'https://srkr-cup.github.io',
+  'https://charan242726.github.io',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 

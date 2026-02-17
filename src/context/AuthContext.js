@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -15,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         const checkLoggedIn = async () => {
             if (token) {
                 try {
-                    const res = await fetch('http://localhost:5001/api/auth/me', {
+                    const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
                         headers: { 'auth-token': token }
                     });
                     if (res.ok) {

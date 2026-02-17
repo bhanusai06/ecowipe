@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import FloatingInput from '../components/FloatingInput';
 import { useAuth } from '../context/AuthContext';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
 const AuthPage = () => {
     // Modes: 'login', 'register', 'forgot'
     const [mode, setMode] = useState('login');
@@ -53,7 +55,7 @@ const AuthPage = () => {
         setError('');
         setDevOtp(''); // Clear previous OTP
         try {
-            const res = await fetch('http://localhost:5001/api/auth/send-otp', {
+            const res = await fetch(`${API_BASE_URL}/api/auth/send-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -84,7 +86,7 @@ const AuthPage = () => {
         setLoading(true);
         setError('');
         try {
-            const res = await fetch('http://localhost:5001/api/auth/verify-otp', {
+            const res = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -110,7 +112,7 @@ const AuthPage = () => {
         setLoading(true);
         setError('');
         try {
-            const res = await fetch('http://localhost:5001/api/auth/login', {
+            const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -139,7 +141,7 @@ const AuthPage = () => {
         setLoading(true);
         setError('');
         try {
-            const res = await fetch('http://localhost:5001/api/auth/register-complete', {
+            const res = await fetch(`${API_BASE_URL}/api/auth/register-complete`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -169,7 +171,7 @@ const AuthPage = () => {
         setLoading(true);
         setError('');
         try {
-            const res = await fetch('http://localhost:5001/api/auth/reset-password', {
+            const res = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -213,7 +215,7 @@ const AuthPage = () => {
                 const mockGoogleId = "google-user-" + Date.now();
                 const mockEmail = `googleuser${Date.now()}@gmail.com`;
 
-                const res = await fetch('http://localhost:5001/api/auth/google', {
+                const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
