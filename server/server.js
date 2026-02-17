@@ -46,6 +46,7 @@ app.use((err, req, res, next) => {
 
 // Routes
 app.use('/api/users', require('./routes/users'));
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/wipe-records', require('./routes/wipeRecords'));
 
 const PORT = process.env.PORT || 5001;

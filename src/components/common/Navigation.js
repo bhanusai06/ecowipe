@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Menu, X, Leaf } from 'lucide-react';
+import { Shield, Menu, X, Leaf, User, LogOut } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useAuth } from '../../context/AuthContext';
 
 const Navigation = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
+    const { user, logout } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -33,6 +37,12 @@ const Navigation = () => {
     const isActive = (path) => {
         if (path === '/') return location.pathname === '/';
         return location.pathname.startsWith(path);
+    };
+
+    const handleLogout = () => {
+        logout();
+        setIsProfileOpen(false);
+        navigate('/login');
     };
 
     return (
@@ -82,13 +92,50 @@ const Navigation = () => {
                         ))}
                     </div>
 
-                    {/* CTA Button */}
+                    {/* User Profile / CTA Button */}
                     <div className="hidden md:block">
-                        <Link to="/wipe">
-                            <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-2 rounded-xl shadow-md hover:shadow-lg transition-all">
-                                Start Wipe
-                            </Button>
-                        </Link>
+                        {user ? (
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 transition-all border border-green-200"
+                                >
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 flex items-center justify-center">
+                                        <User className="w-4 h-4 text-white" />
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-700">{user.email}</span>
+                                </button>
+
+                                <AnimatePresence>
+                                    {isProfileOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
+                                        >
+                                            <div className="px-4 py-3 border-b border-gray-100">
+                                                <p className="text-xs text-gray-500">Signed in as</p>
+                                                <p className="text-sm font-medium text-gray-900 truncate">{user.email}</p>
+                                            </div>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                            >
+                                                <LogOut className="w-4 h-4" />
+                                                Logout
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        ) : (
+                            <Link to="/wipe">
+                                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-2 rounded-xl shadow-md hover:shadow-lg transition-all">
+                                    Start Wipe
+                                </Button>
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}

@@ -1,13 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { WipeWorkflowProvider } from './context/WipeWorkflowContext';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Layouts
 import MainLayout from './pages/MainLayout';
 import WipeLayout from './components/wipe/WipeLayout';
 
+// Auth Page
+import AuthPage from './pages/AuthPage';
+
 // Marketing Pages
 import Home from './pages/Home';
+import DashboardPage from './pages/Dashboard';
 import Features from './pages/Features';
 import TestimonialsPage from './pages/TestimonialsPage';
 import FAQPage from './pages/FAQPage';
@@ -25,29 +31,42 @@ import ProofUploadPage from './pages/wipe/ProofUploadPage';
 function App() {
   return (
     <Router basename="/e-waste">
-      <WipeWorkflowProvider>
-        <Routes>
-          {/* Marketing Pages with Navigation */}
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
-            <Route path="features" element={<Features />} />
-            <Route path="testimonials" element={<TestimonialsPage />} />
-            <Route path="faq" element={<FAQPage />} />
-          </Route>
+      <AuthProvider>
+        <WipeWorkflowProvider>
+          <Routes>
+            {/* Public Auth Route */}
+            <Route path="/login" element={<AuthPage />} />
 
-          {/* Wipe Workflow Pages */}
-          <Route path="/wipe" element={<WipeLayout />}>
-            <Route index element={<WipeLanding />} />
-            <Route path="device" element={<DeviceSelectionPage />} />
-            <Route path="method" element={<MethodSelectionPage />} />
-            <Route path="execute" element={<ExecuteCommandPage />} />
-            <Route path="proof" element={<ProofUploadPage />} />
-          </Route>
+            {/* Protected Dashboard/Home */}
+            <Route path="/" element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<DashboardPage />} />
+              <Route path="features" element={<Features />} />
+              <Route path="testimonials" element={<TestimonialsPage />} />
+              <Route path="faq" element={<FAQPage />} />
+            </Route>
 
-          {/* 404 Page */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </WipeWorkflowProvider>
+            {/* Protected Wipe Workflow */}
+            <Route path="/wipe" element={
+              <ProtectedRoute>
+                <WipeLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<WipeLanding />} />
+              <Route path="device" element={<DeviceSelectionPage />} />
+              <Route path="method" element={<MethodSelectionPage />} />
+              <Route path="execute" element={<ExecuteCommandPage />} />
+              <Route path="proof" element={<ProofUploadPage />} />
+            </Route>
+
+            {/* 404 Page */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </WipeWorkflowProvider>
+      </AuthProvider>
     </Router>
   );
 }

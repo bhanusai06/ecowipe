@@ -1,4 +1,4 @@
-import { Create, Read, List } from 'integrations/Core'; // Assuming Core has these methods
+import { Create, Read, List } from '../integrations/Core'; // Assuming Core has these methods
 
 const WIPE_RECORD_API_ENDPOINT = '/api/wipe-records';
 
@@ -16,7 +16,7 @@ export class WipeRecord {
     try {
       // Attempt to read the record
       const record = await Read(`${WIPE_RECORD_API_ENDPOINT}/${id}`);
-      
+
       if (!record) {
         throw new Error(`No record found with ID ${id}`);
       }
@@ -24,7 +24,7 @@ export class WipeRecord {
       // Validate required fields
       const requiredFields = ['id', 'device_type', 'operating_system', 'wipe_method'];
       const missingFields = requiredFields.filter(field => !record[field]);
-      
+
       if (missingFields.length > 0) {
         throw new Error(`Invalid record data: Missing required fields: ${missingFields.join(', ')}`);
       }

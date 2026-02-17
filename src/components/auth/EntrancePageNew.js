@@ -41,7 +41,7 @@ export default function EntrancePage({ onGoogleClick, onEmailClick }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!validateForm()) {
       return;
     }
@@ -71,9 +71,9 @@ export default function EntrancePage({ onGoogleClick, onEmailClick }) {
       exit={{ opacity: 0 }}
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-green-50/30 to-emerald-50/20 p-8"
     >
-      <motion.div 
-        initial={{ y: 50, opacity: 0 }} 
-        animate={{ y: 0, opacity: 1 }} 
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="w-full max-w-md space-y-8"
       >
@@ -123,7 +123,7 @@ export default function EntrancePage({ onGoogleClick, onEmailClick }) {
             )}
 
             {/* Social Login */}
-            <Button 
+            <Button
               onClick={onGoogleClick}
               className="w-full py-6 bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 shadow-sm flex items-center justify-center gap-3"
             >
@@ -236,7 +236,7 @@ export default function EntrancePage({ onGoogleClick, onEmailClick }) {
               {!isSignUp && (
                 <button
                   type="button"
-                  onClick={() => {/* Handle forgot password */}}
+                  onClick={() => {/* Handle forgot password */ }}
                   className="text-green-600 hover:text-green-700 font-medium"
                 >
                   Forgot password?

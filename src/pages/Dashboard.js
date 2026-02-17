@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { 
-  Award, 
-  Shield, 
-  Leaf, 
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
+import {
+  Award,
+  Shield,
+  Leaf,
   Download,
   Calendar,
   HardDrive,
@@ -14,10 +14,10 @@ import {
   Lock,
   Recycle
 } from "lucide-react";
-import { WipeRecord } from "@/entities/WipeRecord";
-import { User } from "@/entities/User";
+import { WipeRecord } from "../entities/WipeRecord";
+import { User } from "../entities/User";
 import { format } from "date-fns";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+// import { HoverCard, HoverCardContent, HoverCardTrigger } from "../components/ui/hover-card";
 
 
 const BADGE_DEFINITIONS = {
@@ -32,8 +32,6 @@ const BadgeDisplay = ({ badgeKey }) => {
   if (!badge) return null;
 
   const Icon = badge.icon;
-  // Tailwind dynamic classes need to be fully specified to be included in the bundle
-  // For demonstration, we'll use predefined classes based on the color prop.
   const colorClasses = {
     green: "bg-green-100 text-green-600",
     blue: "bg-blue-100 text-blue-600",
@@ -43,49 +41,35 @@ const BadgeDisplay = ({ badgeKey }) => {
   const colorClass = colorClasses[badge.color] || "bg-gray-100 text-gray-600";
 
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <motion.div 
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          className={`w-16 h-16 rounded-full flex items-center justify-center cursor-pointer ${colorClass} border-2 border-white shadow-md`}
-        >
-          <Icon className="w-8 h-8" />
-        </motion.div>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-80">
-        <div className="flex items-center space-x-4">
-          <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${colorClass}`}>
-            <Icon className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold">{badge.name}</h4>
-            <p className="text-sm">{badge.description}</p>
-          </div>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
+    <div title={`${badge.name}: ${badge.description}`} className="flex flex-col items-center gap-2">
+      <motion.div
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        className={`w-16 h-16 rounded-full flex items-center justify-center cursor-pointer ${colorClass} border-2 border-white shadow-md`}
+      >
+        <Icon className="w-8 h-8" />
+      </motion.div>
+      <span className="text-xs font-medium text-gray-600">{badge.name}</span>
+    </div>
   );
 }
 
+import { useAuth } from "../context/AuthContext";
+
 export default function DashboardPage() {
   const [wipeRecords, setWipeRecords] = useState([]);
-  const [userStats, setUserStats] = useState(null);
+  const { user } = useAuth(); // Use user from AuthContext
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [user]);
 
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [records, userData] = await Promise.all([
-        WipeRecord.list("-created_date"),
-        User.me()
-      ]);
-      
+      // In a real app, we might fetch specific records for this user
+      const records = await WipeRecord.list("-created_date");
       setWipeRecords(records);
-      setUserStats(userData);
     } catch (error) {
       console.error("Error loading dashboard data:", error);
     }
@@ -95,7 +79,7 @@ export default function DashboardPage() {
   const getMethodColor = (method) => {
     return {
       quick: "bg-blue-100 text-blue-800",
-      deep: "bg-purple-100 text-purple-800", 
+      deep: "bg-purple-100 text-purple-800",
       military: "bg-red-100 text-red-800"
     }[method] || "bg-gray-100 text-gray-800";
   };
@@ -108,28 +92,28 @@ export default function DashboardPage() {
   const stats = [
     {
       title: "Total Eco Points",
-      value: userStats?.total_eco_points || 0,
+      value: user?.total_eco_points || 0,
       icon: Award,
       color: "from-green-500 to-emerald-500",
       change: "+12% this month"
     },
     {
       title: "Devices Wiped",
-      value: userStats?.total_devices_wiped || 0,
+      value: user?.total_devices_wiped || 0,
       icon: Shield,
       color: "from-blue-500 to-cyan-500",
       change: "All secure"
     },
     {
       title: "Data Wiped",
-      value: `${userStats?.total_data_wiped_gb || 0} GB`,
+      value: `${user?.total_data_wiped_gb || 0} GB`,
       icon: HardDrive,
       color: "from-purple-500 to-indigo-500",
       change: "Permanently deleted"
     },
     {
       title: "CO₂ Saved",
-      value: `${((userStats?.total_data_wiped_gb || 0) * 0.5).toFixed(1)} kg`,
+      value: `${((user?.total_data_wiped_gb || 0) * 0.5).toFixed(1)} kg`,
       icon: Leaf,
       color: "from-emerald-500 to-green-500",
       change: "Environmental impact"
@@ -182,9 +166,9 @@ export default function DashboardPage() {
             </motion.div>
           ))}
         </div>
-        
+
         {/* Badges Section */}
-        {userStats?.eco_badges?.length > 0 && (
+        {user?.eco_badges?.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -196,7 +180,7 @@ export default function DashboardPage() {
                 <CardTitle className="text-2xl font-bold">Your Eco-Badges</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-4">
-                {userStats.eco_badges.map(badgeKey => (
+                {user.eco_badges.map(badgeKey => (
                   <BadgeDisplay key={badgeKey} badgeKey={badgeKey} />
                 ))}
               </CardContent>
@@ -260,7 +244,7 @@ export default function DashboardPage() {
                         <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
                           <DeviceIcon className="w-6 h-6 text-gray-600" />
                         </div>
-                        
+
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <h4 className="font-semibold text-gray-900 capitalize">
@@ -283,13 +267,13 @@ export default function DashboardPage() {
                             )}
                           </div>
                         </div>
-                        
+
                         <div className="text-right">
                           <div className="flex items-center gap-1 text-green-600 font-semibold mb-1">
                             <Award className="w-4 h-4" />
                             +{record.eco_points} points
                           </div>
-                          <Badge 
+                          <Badge
                             variant={record.status === 'completed' ? 'default' : 'secondary'}
                             className={record.status === 'completed' ? 'bg-green-100 text-green-800' : ''}
                           >
@@ -299,7 +283,7 @@ export default function DashboardPage() {
                       </motion.div>
                     );
                   })}
-                </div>  
+                </div>
               )}
             </CardContent>
           </Card>

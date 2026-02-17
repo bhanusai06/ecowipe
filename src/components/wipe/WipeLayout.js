@@ -12,7 +12,7 @@ const WipeLayout = () => {
 
     const handleExit = () => {
         if (window.confirm('Are you sure you want to exit? Your progress will be saved.')) {
-            navigate('/');
+            navigate('/wipe');
         }
     };
 
