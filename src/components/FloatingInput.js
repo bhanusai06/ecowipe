@@ -33,7 +33,9 @@ const FloatingInput = ({ type, name, value, onChange, placeholder, icon: Icon, r
             <label
                 className={`
           absolute left-12 transition-all duration-300 pointer-events-none
-          ${isFocused || value ? '-top-2.5 text-xs text-emerald-400' : 'top-4 text-gray-500'}
+          ${isFocused || value
+                        ? '-top-3 text-xs text-emerald-400 bg-[#0f172a] px-2 rounded'
+                        : 'top-3 text-gray-500'}
         `}
             >
                 {placeholder}
