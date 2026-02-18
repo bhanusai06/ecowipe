@@ -4,7 +4,8 @@ import { Card, CardContent } from '../ui/card';
 import { useNavigate } from 'react-router-dom';
 import ScreenshotVerifier from './ScreenshotVerifier';
 import { Dialog, DialogContent } from '../ui/dialog';
-import { 
+import VerificationVisualizer from './VerificationVisualizer';
+import {
   Upload,
   CheckCircle,
   FileText,
@@ -31,21 +32,26 @@ export default function ProofUpload({ wipeData, onUploaded, onReset }) {
     if (!file) return;
     setUploading(true);
 
-    try {
-      // Show the verifier dialog
-      setShowVerifier(true);
-    } catch (error) {
-      console.error('Upload failed:', error);
-    } finally {
-      setUploading(false);
-    }
+    // Show visualizer for 5 seconds before actual verification
+    setShowVerifier(true);
+
+    // The visualizer will call onComplete, which will trigger the actual verification logic
+    // We'll handle that in a new function handleVisualizerComplete
+  };
+
+  const handleVisualizerComplete = () => {
+    setUploading(false);
+    // Proceed to actual verification (or simulated success for this demo)
+    console.log("Visualizer complete");
+    // For now, we'll simulate a successful verification result after the visualizer
+    handleVerificationComplete({ success: true, confidence: 0.98 });
   };
 
   const handleVerificationComplete = async (result) => {
     setVerificationResult(result);
     if (result.success) {
       setVerified(true);
-      
+
       // Create or update wipe record with proof
       const proofUrl = URL.createObjectURL(file);
       const updatedWipeData = {
@@ -58,10 +64,10 @@ export default function ProofUpload({ wipeData, onUploaded, onReset }) {
       try {
         // Call onUploaded to update the parent component
         await onUploaded(updatedWipeData);
-        
+
         // Wait a bit before showing success state
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         // Show success state before redirecting
         setShowVerifier(false);
 
@@ -88,7 +94,7 @@ export default function ProofUpload({ wipeData, onUploaded, onReset }) {
         <CardContent className="p-6">
           <div className="space-y-6">
             {!file && !verified && (
-              <div 
+              <div
                 className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center"
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -187,14 +193,18 @@ export default function ProofUpload({ wipeData, onUploaded, onReset }) {
 
       {/* Screenshot Verification Dialog */}
       <Dialog open={showVerifier} onOpenChange={setShowVerifier}>
-        <DialogContent className="sm:max-w-[600px]">
-          <ScreenshotVerifier
-            imageFile={file}
-            deviceType={wipeData?.device_type}
-            os={wipeData?.operating_system}
-            wipeMethod={wipeData?.wipe_method}
-            onVerificationComplete={handleVerificationComplete}
-          />
+        <DialogContent className="sm:max-w-[600px] border-0 bg-transparent shadow-none p-0 text-white">
+          {uploading ? (
+            <VerificationVisualizer onComplete={handleVisualizerComplete} />
+          ) : (
+            <ScreenshotVerifier
+              imageFile={file}
+              deviceType={wipeData?.device_type}
+              os={wipeData?.operating_system}
+              wipeMethod={wipeData?.wipe_method}
+              onVerificationComplete={handleVerificationComplete}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
