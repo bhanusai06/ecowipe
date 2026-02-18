@@ -16,6 +16,7 @@ import Home from './pages/Home';
 import DashboardPage from './pages/Dashboard';
 import Features from './pages/Features';
 import TestimonialsPage from './pages/TestimonialsPage';
+import ComplianceGuide from './pages/ComplianceGuide';
 import FAQPage from './pages/FAQPage';
 import NotFound from './pages/NotFound';
 
@@ -46,6 +47,7 @@ function App() {
               <Route index element={<DashboardPage />} />
               <Route path="features" element={<Features />} />
               <Route path="testimonials" element={<TestimonialsPage />} />
+              <Route path="compliance" element={<ComplianceGuide />} />
               <Route path="faq" element={<FAQPage />} />
             </Route>
 
