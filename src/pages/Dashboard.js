@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
+import SystemDiagnostics from "../components/dashboard/SystemDiagnostics";
 import {
   Award,
   Shield,
@@ -134,6 +135,9 @@ export default function DashboardPage() {
             Track your secure wiping activity and environmental impact
           </p>
         </motion.div>
+
+        {/* System Diagnostics Module */}
+        <SystemDiagnostics />
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
