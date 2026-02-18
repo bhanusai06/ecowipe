@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
-import { 
-  Smartphone, 
-  Laptop, 
-  HardDrive, 
+import {
+  Smartphone,
+  Laptop,
+  HardDrive,
   Usb,
   Monitor,
   ArrowRight
@@ -92,12 +92,11 @@ export default function DeviceSelector({ onSelect }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
           >
-            <Card 
-              className={`cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:scale-105 ${
-                selectedDevice?.type === device.type 
-                  ? 'ring-2 ring-green-500 shadow-lg' 
-                  : 'hover:shadow-lg'
-              }`}
+            <Card
+              className={`cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:scale-105 ${selectedDevice?.type === device.type
+                ? 'ring-2 ring-green-500 shadow-lg'
+                : 'hover:shadow-lg'
+                }`}
               onClick={() => handleDeviceSelect(device)}
             >
               <CardContent className="p-6 text-center">
@@ -112,7 +111,7 @@ export default function DeviceSelector({ onSelect }) {
                 </p>
                 <div className="flex flex-wrap gap-1 justify-center">
                   {device.os.map((os) => (
-                    <span 
+                    <span
                       key={os}
                       className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium"
                     >
@@ -130,7 +129,7 @@ export default function DeviceSelector({ onSelect }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-green-50 rounded-2xl p-6 border border-green-200"
+          className="bg-green-50 rounded-2xl p-6 border border-green-200 mb-20 md:mb-0"
         >
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Select Operating System for {selectedDevice.title}
@@ -140,31 +139,32 @@ export default function DeviceSelector({ onSelect }) {
               <Button
                 key={os}
                 variant={selectedOS === os ? "default" : "outline"}
-                className={`${
-                  selectedOS === os 
-                    ? 'bg-green-600 hover:bg-green-700' 
-                    : 'hover:bg-green-50'
-                } transition-all duration-200`}
+                className={`${selectedOS === os
+                  ? 'bg-green-600 hover:bg-green-700'
+                  : 'hover:bg-green-50'
+                  } transition-all duration-200 py-2 h-auto`}
                 onClick={() => handleOSSelect(os)}
               >
                 {os.charAt(0).toUpperCase() + os.slice(1)}
               </Button>
             ))}
           </div>
-          
+
           {selectedOS && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 text-center"
+              className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 md:static md:bg-transparent md:border-t-0 md:p-0 mt-6 z-30"
             >
-              <Button
-                onClick={handleNext}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                Continue to Wipe Method
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
+              <div className="max-w-4xl mx-auto text-center">
+                <Button
+                  onClick={handleNext}
+                  className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white px-8 py-4 md:py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg md:text-base font-semibold"
+                >
+                  Continue to Wipe Method
+                  <ArrowRight className="ml-2 w-5 h-5 md:w-4 md:h-4" />
+                </Button>
+              </div>
             </motion.div>
           )}
         </motion.div>

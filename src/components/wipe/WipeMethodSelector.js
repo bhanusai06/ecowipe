@@ -88,7 +88,7 @@ export default function WipeMethodSelector({ deviceType, onSelect }) {
         <Button
           onClick={() => setShowComparison(!showComparison)}
           variant="outline"
-          className="mb-4 flex items-center gap-2 mx-auto"
+          className="mb-4 flex items-center gap-2 mx-auto px-4 py-2"
         >
           <BarChart3 className="w-4 h-4" />
           {showComparison ? 'Hide' : 'Show'} Detailed Comparison
@@ -106,7 +106,7 @@ export default function WipeMethodSelector({ deviceType, onSelect }) {
         </motion.div>
       )}
 
-      <div className="grid gap-6">
+      <div className="grid gap-4 md:gap-6">
         {wipeMethods.map((method, index) => (
           <motion.div
             key={method.type}
@@ -121,15 +121,15 @@ export default function WipeMethodSelector({ deviceType, onSelect }) {
                 }`}
               onClick={() => handleMethodSelect(method)}
             >
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${method.color} flex items-center justify-center shadow-lg`}>
+              <CardContent className="p-4 md:p-6">
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-left">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${method.color} flex items-center justify-center shadow-lg shrink-0`}>
                     <method.icon className="w-7 h-7 text-white" />
                   </div>
 
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-bold text-gray-900">
+                  <div className="flex-1 w-full">
+                    <div className="flex flex-col md:flex-row items-center md:justify-between gap-2 mb-2">
+                      <h3 className="text-lg md:text-xl font-bold text-gray-900">
                         {method.title}
                       </h3>
                       <Badge
@@ -145,22 +145,28 @@ export default function WipeMethodSelector({ deviceType, onSelect }) {
                       </Badge>
                     </div>
 
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 text-sm md:text-base mb-4">
                       {method.description}
                     </p>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-500" />
-                        <span className="text-gray-700">{method.duration}</span>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm bg-gray-50 md:bg-transparent p-3 md:p-0 rounded-lg">
+                      <div className="flex flex-col md:flex-row items-center md:gap-2">
+                        <div className="flex items-center gap-1 text-gray-500 mb-1 md:mb-0">
+                          <Clock className="w-3 h-3 md:w-4 md:h-4" />
+                          <span className="text-xs md:hidden">Time</span>
+                        </div>
+                        <span className="text-gray-900 font-medium md:font-normal md:text-gray-700">{method.duration}</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 text-gray-500" />
-                        <span className="text-gray-700">{method.passes}</span>
+                      <div className="flex flex-col md:flex-row items-center md:gap-2">
+                        <div className="flex items-center gap-1 text-gray-500 mb-1 md:mb-0">
+                          <AlertTriangle className="w-3 h-3 md:w-4 md:h-4" />
+                          <span className="text-xs md:hidden">Passes</span>
+                        </div>
+                        <span className="text-gray-900 font-medium md:font-normal md:text-gray-700">{method.passes}</span>
                       </div>
-                      <div className="col-span-2">
+                      <div className="col-span-2 text-center md:text-left border-t border-gray-100 md:border-0 pt-2 md:pt-0 mt-1 md:mt-0">
                         <p className="text-xs text-gray-500">
-                          <strong>Recommended for:</strong> {method.recommended}
+                          <strong className="block md:inline mb-1 md:mb-0">Recommended:</strong> {method.recommended}
                         </p>
                       </div>
                     </div>

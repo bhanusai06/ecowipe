@@ -12,21 +12,21 @@ const WipeLayout = () => {
 
     const handleExit = () => {
         if (window.confirm('Are you sure you want to exit? Your progress will be saved.')) {
-            navigate('/wipe');
+            navigate('/');
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50/30 to-blue-50/20 pt-20">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50/30 to-blue-50/20 pt-16 md:pt-20">
             {/* Progress Stepper */}
             {currentStep > 0 && <ProgressStepper currentStep={currentStep} />}
 
             {/* Exit Button */}
-            <div className="mx-auto max-w-4xl px-6 py-4">
+            <div className="mx-auto max-w-4xl px-4 py-2 md:px-6 md:py-4 flex justify-end">
                 <Button
                     onClick={handleExit}
                     variant="ghost"
-                    className="text-gray-600 hover:text-gray-900"
+                    className="text-gray-600 hover:text-gray-900 px-4 py-2"
                 >
                     <X className="mr-2 h-4 w-4" />
                     Exit Workflow

@@ -153,56 +153,63 @@ const Navigation = () => {
                     </button>
                 </div>
 
-                {/* Mobile Menu */}
+                {/* Mobile Menu Overlay */}
                 <AnimatePresence>
                     {isMobileMenuOpen && (
                         <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.2 }}
-                            className="md:hidden overflow-hidden bg-white/95 backdrop-blur-md border-t border-gray-100"
+                            className="md:hidden fixed inset-0 top-[72px] bg-white z-40 overflow-y-auto pb-20 px-6 flex flex-col"
                         >
-                            <div className="py-4 space-y-3">
+                            <div className="py-6 space-y-4 flex-1">
                                 {navItems.map((item) => (
                                     <Link
                                         key={item.path}
                                         to={item.path}
-                                        className={`block py-2 px-4 rounded-lg text-sm font-medium transition-colors ${isActive(item.path)
-                                            ? 'bg-green-50 text-green-600'
-                                            : 'text-gray-700 hover:bg-gray-50'
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`block py-4 px-4 rounded-xl text-lg font-medium transition-all ${isActive(item.path)
+                                            ? 'bg-green-50 text-green-700 shadow-sm border border-green-100'
+                                            : 'text-gray-600 hover:bg-gray-50'
                                             }`}
                                     >
-                                        {item.name}
+                                        <div className="flex items-center justify-between">
+                                            {item.name}
+                                            {isActive(item.path) && <div className="w-2 h-2 rounded-full bg-green-500" />}
+                                        </div>
                                     </Link>
                                 ))}
-                                {user ? (
-                                    <div className="pt-4 mt-4 border-t border-gray-100">
-                                        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl mb-3">
-                                            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 flex items-center justify-center shadow-sm shrink-0">
-                                                <User className="w-5 h-5 text-white" />
-                                            </div>
-                                            <div className="flex flex-col overflow-hidden">
-                                                <span className="text-sm font-semibold text-gray-900">Signed in as</span>
-                                                <span className="text-xs text-gray-500 truncate" title={user.email}>{user.email}</span>
-                                            </div>
-                                        </div>
 
-                                        <button
-                                            onClick={handleLogout}
-                                            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 active:bg-red-200 transition-colors rounded-xl"
-                                        >
-                                            <LogOut className="w-4 h-4" />
-                                            Sign Out
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <Link to="/wipe" className="block pt-2">
-                                        <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl shadow-md">
-                                            Start Wipe
-                                        </Button>
-                                    </Link>
-                                )}
+                                <div className="mt-8 pt-8 border-t border-gray-100">
+                                    {user ? (
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 flex items-center justify-center shadow-md text-white text-lg font-bold">
+                                                    {user.email[0].toUpperCase()}
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-gray-900 font-semibold">Signed in as</span>
+                                                    <span className="text-gray-500 text-sm">{user.email}</span>
+                                                </div>
+                                            </div>
+
+                                            <button
+                                                onClick={handleLogout}
+                                                className="w-full flex items-center justify-center gap-2 px-6 py-4 text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 active:bg-red-200 transition-colors rounded-xl"
+                                            >
+                                                <LogOut className="w-5 h-5" />
+                                                Sign Out
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <Link to="/wipe" onClick={() => setIsMobileMenuOpen(false)}>
+                                            <Button className="w-full h-14 text-lg bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl shadow-lg hover:shadow-xl">
+                                                Start Secure Wipe
+                                            </Button>
+                                        </Link>
+                                    )}
+                                </div>
                             </div>
                         </motion.div>
                     )}
