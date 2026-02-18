@@ -57,18 +57,18 @@ const SystemDiagnostics = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay, duration: 0.3 }}
-            className={`flex items-center gap-4 p-4 rounded-xl border border-gray-100 bg-white/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-all group`}
+            className={`flex flex-col md:flex-row items-center md:items-start gap-3 md:gap-4 p-4 rounded-xl border border-gray-100 bg-white/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-all group text-center md:text-left`}
         >
-            <div className={`w-12 h-12 rounded-full bg-${color}-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                <Icon className={`w-6 h-6 text-${color}-500`} />
+            <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full bg-${color}-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shrink-0`}>
+                <Icon className={`w-5 h-5 md:w-6 md:h-6 text-${color}-500`} />
             </div>
-            <div>
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{label}</p>
-                <div className="h-6 flex items-center">
+            <div className="min-w-0">
+                <p className="text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider truncate mb-1 md:mb-0">{label}</p>
+                <div className="h-6 flex items-center justify-center md:justify-start">
                     {loading ? (
                         <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
                     ) : (
-                        <p className="text-lg font-bold text-gray-900">{value}</p>
+                        <p className="text-sm md:text-lg font-bold text-gray-900 truncate max-w-full leading-tight">{value}</p>
                     )}
                 </div>
             </div>

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import GeometricBackground from "../components/common/GeometricBackground";
 
 import DeviceSelector from "../components/wipe/DeviceSelector";
 import WipeMethodSelector from "../components/wipe/WipeMethodSelector";
@@ -189,9 +190,11 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50/30 to-blue-50/20">
+    <div className="min-h-screen bg-slate-50 relative overflow-hidden">
+      <GeometricBackground />
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-white via-green-50/50 to-emerald-50/30 py-16">
+      <section className="relative pt-20 pb-32 overflow-hidden">
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
 
         <div className="relative max-w-7xl mx-auto px-6">

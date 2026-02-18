@@ -8,6 +8,8 @@ const sendEmail = async (email, subject, text) => {
                 user: process.env.EMAIL_USER, // e.g., 'your-email@gmail.com'
                 pass: process.env.EMAIL_PASS, // e.g., 'your-app-password'
             },
+            connectionTimeout: 10000, // 10 seconds
+            socketTimeout: 10000, // 10 seconds
         });
 
         await transporter.sendMail({

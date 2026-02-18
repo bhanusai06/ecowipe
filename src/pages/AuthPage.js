@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Lock, Mail, ArrowRight, Loader2, Leaf, Globe, CheckCircle } from 'lucide-react';
+import { User, Lock, Mail, ArrowRight, Loader2, Leaf, Globe, CheckCircle, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import FloatingInput from '../components/FloatingInput';
 import { useAuth } from '../context/AuthContext';
@@ -603,7 +603,16 @@ const AuthPage = () => {
                     variants={formVariants}
                     className="w-full max-w-md relative z-10"
                 >
-                    <div className="mb-12">
+                    <div className="mb-8 text-center lg:text-left">
+                        <div className="flex items-center justify-center lg:justify-start gap-2 mb-6">
+                            <div className="relative">
+                                <Shield className="h-8 w-8 text-emerald-500" />
+                                <Leaf className="absolute -right-1 -top-1 h-3 w-3 text-cyan-400" />
+                            </div>
+                            <span className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                                EcoWIPE
+                            </span>
+                        </div>
                         <h2 className="text-3xl font-bold mb-2">
                             {mode === 'login' ? 'Welcome back' : mode === 'register' ? 'Create an account' : 'Reset Password'}
                         </h2>
