@@ -216,33 +216,6 @@ router.post('/google', async (req, res) => {
     }
 });
 
-// Register (Direct - Optional, if needed without OTP)
-router.post('/register', async (req, res) => {
-    console.log('Register request:', req.body);
-    try {
-        // Check if user already exists
-        const userExists = await User.findOne({ email: req.body.email });
-        if (userExists) return res.status(400).send('Email already exists');
-
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(req.body.password, salt);
-
-        // Create new user
-        const user = new User({
-            email: req.body.email,
-            password: hashPassword,
-            isVerified: true // Direct registration assumed verified or requires email verification step
-        });
-
-        const savedUser = await user.save();
-        console.log('User saved:', savedUser._id);
-        res.send({ user: user._id });
-    } catch (err) {
-        console.error('Register error:', err);
-        res.status(400).send(err);
-    }
-});
 
 // Login
 router.post('/login', async (req, res) => {
