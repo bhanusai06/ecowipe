@@ -29,6 +29,7 @@ const Navigation = () => {
 
     const navItems = [
         { name: 'Home', path: '/' },
+        ...(user ? [{ name: 'Dashboard', path: '/dashboard' }] : []),
         { name: 'Features', path: '/features' },
         { name: 'Testimonials', path: '/testimonials' },
         { name: 'Compliance Guide', path: '/compliance' },

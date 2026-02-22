@@ -72,9 +72,6 @@ const Features = () => {
                 </div>
             </section>
 
-            {/* Download OS Section - New Feature */}
-            <DownloadOSSection />
-
             {/* Main Features */}
             <section className="px-6 py-16">
                 <div className="mx-auto max-w-6xl">

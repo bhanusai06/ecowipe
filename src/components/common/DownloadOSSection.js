@@ -13,13 +13,13 @@ const DownloadOSSection = () => {
         toast.loading('Initializing secure download...', { id: 'download-os' });
 
         setTimeout(() => {
-            toast.error('Beta Access Restricted: Please join the waitlist.', { id: 'download-os' });
+            toast.success('Download starting...', { id: 'download-os' });
             setIsDownloading(false);
-        }, 2000);
+        }, 1500);
     };
 
     return (
-        <section className="py-24 bg-gray-900 relative overflow-hidden">
+        <section id="downloads" className="py-24 bg-gray-900 relative overflow-hidden">
             {/* Background Grid */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
             <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:40px_40px]"></div>
@@ -38,26 +38,26 @@ const DownloadOSSection = () => {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                             </span>
-                            v0.9.2 Beta Live
+                            v1.0.0 Enterprise Release
                         </div>
 
                         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                             Military-Grade Wiping.<br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-                                Zero OS Dependencies.
+                                Native Hardware Access.
                             </span>
                         </h2>
 
                         <p className="text-gray-400 text-lg mb-8 leading-relaxed">
-                            EcoWIPE OS is a custom Linux-based distinct operating system designed solely for data destruction.
-                            Boot directly from USB to wipe any supported device without aggressive host OS interference.
+                            Download the **Desktop Agent** to wipe connected external drives, or flash the **Live OS** to a USB to completely destroy the host computer's data—even without an internet connection.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                            {/* Desktop Agent Button */}
                             <Button
                                 onClick={handleDownload}
                                 disabled={isDownloading}
-                                className="h-14 px-8 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-lg font-medium shadow-lg shadow-emerald-900/20 flex items-center gap-3 transition-all"
+                                className="h-14 px-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-base font-medium shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-3 transition-all flex-1"
                             >
                                 {isDownloading ? (
                                     <>
@@ -66,15 +66,27 @@ const DownloadOSSection = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <Download className="w-5 h-5" />
-                                        Download .ISO
-                                        <span className="text-xs opacity-70 font-normal ml-1">(650MB)</span>
+                                        <Terminal className="w-5 h-5" />
+                                        <div className="flex flex-col items-start leading-none">
+                                            <span>Desktop Agent</span>
+                                            <span className="text-xs opacity-70 font-normal">(.exe / .deb)</span>
+                                        </div>
                                     </>
                                 )}
                             </Button>
 
-                            <Button variant="outline" className="h-14 px-8 border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl text-lg font-medium">
-                                Documentation
+                            {/* Live OS Button */}
+                            <Button
+                                onClick={handleDownload}
+                                disabled={isDownloading}
+                                variant="outline"
+                                className="h-14 px-6 border-emerald-500/30 bg-emerald-900/20 text-emerald-400 hover:bg-emerald-900/40 hover:text-emerald-300 rounded-xl text-base font-medium flex items-center justify-center gap-3 transition-all flex-1"
+                            >
+                                <Download className="w-5 h-5" />
+                                <div className="flex flex-col items-start leading-none">
+                                    <span>Live OS</span>
+                                    <span className="text-xs opacity-70 font-normal">(.iso)</span>
+                                </div>
                             </Button>
                         </div>
 

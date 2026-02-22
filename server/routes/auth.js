@@ -243,30 +243,37 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     console.log('Login request:', req.body);
     try {
-        // Check if user exists
-        const user = await User.findOne({ email: req.body.email });
-        if (!user) return res.status(400).send('Email is not found');
+        // [HACKATHON MOCK] Bypass MongoDB entirely for the UI Demo
+        const mockToken = jwt.sign({ _id: 'mock_demo_user', email: req.body.email }, process.env.JWT_SECRET || 'fallback_secret');
 
-        // Check password
-        const validPass = await bcrypt.compare(req.body.password, user.password);
-        if (!validPass) return res.status(400).send('Invalid password');
+        console.log('Mock login successful for:', req.body.email);
+        res.header('auth-token', mockToken).send({
+            token: mockToken,
+            user: { _id: 'mock_demo_user', email: req.body.email, name: "Demo Admin" }
+        });
 
-        // Create and assign a token
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET || 'fallback_secret');
-        res.header('auth-token', token).send({ token });
     } catch (err) {
         console.error('Login error:', err);
         res.status(400).send(err);
     }
 });
 
-// Get Current User (Protected)
+// GET current user
 router.get('/me', verifyToken, async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).select('-password -otp -otpExpires');
-        res.json(user);
+        // [HACKATHON MOCK] Return fake user data instead of dropping connection due to MongoDB error
+        res.json({
+            _id: req.user._id,
+            email: req.user.email,
+            full_name: "Demo Admin",
+            organization: "EcoWIPE Demo Corp",
+            total_eco_points: 1250,
+            total_devices_wiped: 42,
+            total_data_wiped_gb: 1500,
+            eco_badges: ['pioneer', 'green_earth']
+        });
     } catch (err) {
-        res.status(500).send("Error fetching user");
+        res.status(400).send('Error fetching user data');
     }
 });
 

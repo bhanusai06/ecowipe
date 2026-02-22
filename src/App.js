@@ -38,17 +38,22 @@ function App() {
             {/* Public Auth Route */}
             <Route path="/login" element={<AuthPage />} />
 
-            {/* Protected Dashboard/Home */}
-            <Route path="/" element={
+            {/* Public Marketing Routes */}
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<Home />} />
+              <Route path="features" element={<Features />} />
+              <Route path="testimonials" element={<TestimonialsPage />} />
+              <Route path="compliance" element={<ComplianceGuide />} />
+              <Route path="faq" element={<FAQPage />} />
+            </Route>
+
+            {/* Protected Dashboard Routes */}
+            <Route path="/dashboard" element={
               <ProtectedRoute>
                 <MainLayout />
               </ProtectedRoute>
             }>
               <Route index element={<DashboardPage />} />
-              <Route path="features" element={<Features />} />
-              <Route path="testimonials" element={<TestimonialsPage />} />
-              <Route path="compliance" element={<ComplianceGuide />} />
-              <Route path="faq" element={<FAQPage />} />
             </Route>
 
             {/* Protected Wipe Workflow */}
@@ -69,7 +74,7 @@ function App() {
           </Routes>
         </WipeWorkflowProvider>
       </AuthProvider>
-    </Router>
+    </Router >
   );
 }
 

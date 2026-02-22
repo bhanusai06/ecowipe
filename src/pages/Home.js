@@ -12,11 +12,15 @@ import {
   Laptop,
   HardDrive,
   Usb,
-  FileText
+  FileText,
+  Cloud,
+  Terminal,
+  Cpu
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import GeometricBackground from "../components/common/GeometricBackground";
+import DownloadOSSection from "../components/common/DownloadOSSection";
 
 import DeviceSelector from "../components/wipe/DeviceSelector";
 import WipeMethodSelector from "../components/wipe/WipeMethodSelector";
@@ -24,7 +28,6 @@ import CommandGenerator from "../components/wipe/CommandGenerator";
 import ProofUpload from "../components/wipe/ProofUpload";
 import EcoTip from "../components/eco/EcoTip";
 import AuthModal from "../components/auth/Authmodal.js";
-import EntrancePage from "../components/auth/EntrancePage";
 import { User } from "../entities/User";
 
 
@@ -174,20 +177,6 @@ export default function HomePage() {
     usb: Usb
   };
 
-  if (!workflowStarted && !user) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <EntrancePage
-          onGoogleClick={() => setShowAuthModal(true)}
-          onEmailClick={handleAuth}
-        />
-      </motion.div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-hidden">
@@ -215,8 +204,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-xl lg:text-2xl text-gray-600 mb-8 font-light max-w-3xl mx-auto leading-relaxed">
-              Securely wipe your devices with <span className="font-semibold text-green-600">certified proof</span>,
-              promote eco-friendly recycling, and earn rewards for sustainable practices.
+              Securely wipe any device with our <span className="font-semibold text-green-600">3-Pillar Architecture</span>: Cloud Dashboard, Desktop Agent, and Live OS.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 mb-12">
@@ -238,16 +226,107 @@ export default function HomePage() {
               ))}
             </div>
 
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  onClick={() => navigate('/')}
+                  className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Access Cloud Dashboard
+                </Button>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  onClick={startWorkflow}
+                  className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-4 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  Run Web Simulator
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 3 Pillar Architecture Section */}
+      <section className="py-20 bg-white relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              The 3-Pillar Architecture
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              EcoWipe's comprehensive suite ensures absolute data destruction across any hardware environment.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Pillar 1: Cloud Dashboard */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="bg-slate-50 border border-slate-200 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all flex flex-col"
+            >
+              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                <Cloud className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Cloud Dashboard</h3>
+              <p className="text-gray-600 mb-8 flex-grow">
+                Centralized fleet management. Generate certified tamper-proof reports, view real-time analytics, and track your organization's eco-impact.
+              </p>
               <Button
-                onClick={startWorkflow}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-4 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform"
+                onClick={() => navigate('/')}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 rounded-xl text-lg mt-auto"
               >
-                Start Secure Wipe
-                <ArrowRight className="ml-2 w-5 h-5" />
+                Access Dashboard
               </Button>
             </motion.div>
-          </motion.div>
+
+            {/* Pillar 2: Desktop Agent */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="bg-slate-50 border border-slate-200 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all flex flex-col"
+            >
+              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                <Terminal className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Desktop Agent</h3>
+              <p className="text-gray-600 mb-8 flex-grow">
+                Native hardware access application. Install directly to your operating system to securely wipe connected external drives and USBs.
+              </p>
+              <Button
+                onClick={() => {
+                  document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 rounded-xl text-lg mt-auto"
+              >
+                Download Agent
+              </Button>
+            </motion.div>
+
+            {/* Pillar 3: Live OS */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="bg-slate-50 border border-slate-200 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all flex flex-col"
+            >
+              <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                <Cpu className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Live OS</h3>
+              <p className="text-gray-600 mb-8 flex-grow">
+                Bootable Linux environment. Flash to a USB to perform bare-metal data destruction on host computers, securely in air-gapped environments.
+              </p>
+              <Button
+                onClick={() => {
+                  document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-xl text-lg mt-auto"
+              >
+                Download ISO
+              </Button>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -322,6 +401,9 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Unified Downloads Section */}
+      <DownloadOSSection />
 
       {/* Auth Modal */}
       <AuthModal
