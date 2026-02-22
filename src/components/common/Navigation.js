@@ -116,10 +116,18 @@ const Navigation = () => {
                                             exit={{ opacity: 0, y: -10 }}
                                             className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
                                         >
-                                            <div className="px-4 py-3 border-b border-gray-100">
+                                            <div className="px-4 py-3 border-b border-gray-100 mb-1">
                                                 <p className="text-xs text-gray-500">Signed in as</p>
                                                 <p className="text-sm font-medium text-gray-900 truncate">{user.email}</p>
                                             </div>
+                                            <Link
+                                                to="/dashboard/profile"
+                                                onClick={() => setIsProfileOpen(false)}
+                                                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
+                                            >
+                                                <User className="w-4 h-4" />
+                                                My Profile
+                                            </Link>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
@@ -194,6 +202,15 @@ const Navigation = () => {
                                                     <span className="text-gray-500 text-sm">{user.email}</span>
                                                 </div>
                                             </div>
+
+                                            <Link
+                                                to="/dashboard/profile"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="w-full flex items-center justify-center gap-2 px-6 py-4 text-base font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 transition-colors rounded-xl mb-4"
+                                            >
+                                                <User className="w-5 h-5" />
+                                                My Profile
+                                            </Link>
 
                                             <button
                                                 onClick={handleLogout}

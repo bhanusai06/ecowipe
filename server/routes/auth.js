@@ -122,9 +122,9 @@ router.post('/verify-otp', async (req, res) => {
 });
 
 // Register (Complete Registration after OTP)
-router.post('/register-complete', async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
-        const { email, password, token } = req.body;
+        const { email, password, full_name, token } = req.body;
 
         const verified = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
         if (verified.email !== email || verified.scope !== 'verified') {
@@ -139,6 +139,7 @@ router.post('/register-complete', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         user.password = hashedPassword;
+        user.full_name = full_name; // Save the collected name
         await user.save();
 
         // Login the user immediately
@@ -182,7 +183,7 @@ router.post('/reset-password', async (req, res) => {
 router.post('/google', async (req, res) => {
     console.log('Google Auth request received:', req.body);
     try {
-        const { email, googleId } = req.body;
+        const { email, googleId, name } = req.body;
 
         let user = await User.findOne({ email });
 
@@ -191,12 +192,16 @@ router.post('/google', async (req, res) => {
             user = new User({
                 email,
                 googleId,
+                full_name: name || 'Google User',
                 isVerified: true // Google accounts start verified
             });
             await user.save();
         } else if (!user.googleId) {
             // Link googleId if user exists but hasn't used Google Auth before
             user.googleId = googleId;
+            if (name && (!user.full_name || user.full_name === 'User')) {
+                user.full_name = name;
+            }
             if (!user.isVerified) user.isVerified = true;
             await user.save();
         }
@@ -243,13 +248,18 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     console.log('Login request:', req.body);
     try {
-        // [HACKATHON MOCK] Bypass MongoDB entirely for the UI Demo
-        const mockToken = jwt.sign({ _id: 'mock_demo_user', email: req.body.email }, process.env.JWT_SECRET || 'fallback_secret');
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) return res.status(400).send('Email is not found');
 
-        console.log('Mock login successful for:', req.body.email);
-        res.header('auth-token', mockToken).send({
-            token: mockToken,
-            user: { _id: 'mock_demo_user', email: req.body.email, name: "Demo Admin" }
+        const validPass = await bcrypt.compare(req.body.password, user.password);
+        if (!validPass) return res.status(400).send('Invalid password');
+
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET || 'fallback_secret');
+
+        console.log('Login successful for:', req.body.email);
+        res.header('auth-token', token).send({
+            token: token,
+            user: user
         });
 
     } catch (err) {
@@ -261,19 +271,12 @@ router.post('/login', async (req, res) => {
 // GET current user
 router.get('/me', verifyToken, async (req, res) => {
     try {
-        // [HACKATHON MOCK] Return fake user data instead of dropping connection due to MongoDB error
-        res.json({
-            _id: req.user._id,
-            email: req.user.email,
-            full_name: "Demo Admin",
-            organization: "EcoWIPE Demo Corp",
-            total_eco_points: 1250,
-            total_devices_wiped: 42,
-            total_data_wiped_gb: 1500,
-            eco_badges: ['pioneer', 'green_earth']
-        });
+        const user = await User.findById(req.user._id).select('-password');
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+        res.json(user);
     } catch (err) {
-        res.status(400).send('Error fetching user data');
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
 });
 

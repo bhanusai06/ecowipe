@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import DownloadOSSection from "../components/common/DownloadOSSection";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
@@ -13,7 +15,10 @@ import {
   HardDrive,
   TrendingUp,
   Lock,
-  Recycle
+  Recycle,
+  ArrowRight,
+  Terminal,
+  Cpu
 } from "lucide-react";
 import { WipeRecord } from "../entities/WipeRecord";
 import { User } from "../entities/User";
@@ -168,6 +173,39 @@ export default function DashboardPage() {
               </Card>
             </motion.div>
           ))}
+        </div>
+
+        {/* Quick Actions / Execute Wipe */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8 hidden md:block" // Hidden on small screens if you want, but better to keep
+        >
+          <Card className="bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-xl overflow-hidden relative border-0">
+            <div className="absolute right-0 top-0 opacity-10 pointer-events-none">
+              <Terminal className="w-64 h-64 -mt-10 -mr-10" />
+            </div>
+            <CardContent className="p-8 md:p-12 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="max-w-xl">
+                <h3 className="text-3xl font-bold mb-4">Start New Data Destruction</h3>
+                <p className="text-slate-300 text-lg mb-0">
+                  Execute a secure data wipe using our Web Simulator. This interface mirrors the Desktop Agent experience for selecting devices, methods, and generating verifiable certificates.
+                </p>
+              </div>
+              <Link to="/wipe">
+                <Button className="bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-green-500/20 px-8 py-6 text-xl rounded-xl whitespace-nowrap group transition-all duration-300">
+                  Launch Web Simulator
+                  <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Unified Downloads Hub */}
+        <div className="mb-8">
+          <DownloadOSSection />
         </div>
 
         {/* Badges Section */}

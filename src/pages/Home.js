@@ -20,163 +20,18 @@ import {
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import GeometricBackground from "../components/common/GeometricBackground";
-import DownloadOSSection from "../components/common/DownloadOSSection";
-
-import DeviceSelector from "../components/wipe/DeviceSelector";
-import WipeMethodSelector from "../components/wipe/WipeMethodSelector";
-import CommandGenerator from "../components/wipe/CommandGenerator";
-import ProofUpload from "../components/wipe/ProofUpload";
-import EcoTip from "../components/eco/EcoTip";
-import AuthModal from "../components/auth/Authmodal.js";
 import { User } from "../entities/User";
-
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [workflowStarted, setWorkflowStarted] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [user, setUser] = useState(null);
-  const [wipeData, setWipeData] = useState({
-    deviceType: null,
-    os: null,
-    wipeMethod: null,
-    command: null,
-    proofUploaded: false
-  });
-  const workflowRef = useRef(null);
-
-  const steps = [
-    { number: 1, title: "Select Device", completed: !!wipeData.deviceType },
-    { number: 2, title: "Choose Method", completed: !!wipeData.wipeMethod },
-    { number: 3, title: "Execute Wipe", completed: !!wipeData.command },
-    { number: 4, title: "Upload Proof", completed: wipeData.proofUploaded },
-  ];
-
-  const handleDeviceSelect = (deviceType, os) => {
-    setWipeData(prev => ({ ...prev, deviceType, os }));
-    setCurrentStep(2);
-  };
-
-  const handleMethodSelect = (method) => {
-    setWipeData(prev => ({ ...prev, wipeMethod: method }));
-    setCurrentStep(3);
-  };
-
-  const handleCommandGenerated = (command) => {
-    setWipeData(prev => ({ ...prev, command }));
-  };
-
-  const handleCommandExecuted = () => {
-    setCurrentStep(4);
-  };
-
-  const handleProofUploaded = () => {
-    setWipeData(prev => ({ ...prev, proofUploaded: true }));
-  };
-
-  const checkAuth = async () => {
-    // TEMPORARY: Bypass authentication for testing
-    // Auto-login with a mock user
-    const mockUser = {
-      _id: 'mock-user-123',
-      email: 'test@ecowipe.com',
-      full_name: 'Test User',
-      organization: 'Test Organization',
-      total_eco_points: 0,
-      total_devices_wiped: 0,
-      total_data_wiped_gb: 0,
-      eco_badges: []
-    };
-    setUser(mockUser);
-
-    /* ORIGINAL CODE - Uncomment to re-enable login:
-    try {
-      const currentUser = await User.me();
-      setUser(currentUser);
-    } catch (error) {
-      // User not authenticated or error checking auth
-      setUser(null);
-    }
-    */
-  };
 
   useEffect(() => {
-    checkAuth();
-    // Auto-start workflow after a brief delay
-    setTimeout(() => {
-      setWorkflowStarted(true);
-      setCurrentStep(1);
-    }, 100);
-  }, []);
-
-  const startWorkflow = () => {
-    // Authentication check removed for direct access
-    setWorkflowStarted(true);
-    setCurrentStep(1);
-    setTimeout(() => {
-      workflowRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-  };
-
-  const handleAuth = async (formData, isSignUp) => {
-    try {
-      let userData;
-      if (isSignUp) {
-        // Create new user
-        userData = await User.create({
-          email: formData.email,
-          full_name: formData.fullName,
-          organization: "Individual User",
-          total_eco_points: 0,
-          total_devices_wiped: 0,
-          total_data_wiped_gb: 0,
-          eco_badges: []
-        });
-      } else {
-        // Sign in existing user
-        const users = await User.filter({ email: formData.email });
-        userData = users[0];
-      }
-
-      handleAuthSuccess(userData);
-    } catch (error) {
-      console.error('Auth error:', error);
+    // Check if user is logged in
+    const token = localStorage.getItem('auth-token');
+    if (token) {
+      // In a real app we'd fetch the user profile here if we didn't use context
     }
-  };
-
-  const handleAuthSuccess = (userData) => {
-    setUser(userData);
-    setShowAuthModal(false);
-
-    // Smoothly start workflow after auth
-    setWorkflowStarted(true);
-    setCurrentStep(1);
-    setTimeout(() => {
-      workflowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 300);
-  };
-
-  const resetWorkflow = () => {
-    setWorkflowStarted(false);
-    setCurrentStep(0);
-    setWipeData({
-      deviceType: null,
-      os: null,
-      wipeMethod: null,
-      command: null,
-      proofUploaded: false
-    });
-  };
-
-  const deviceIcons = {
-    mobile: Smartphone,
-    laptop: Laptop,
-    hdd: HardDrive,
-    ssd: HardDrive,
-    usb: Usb
-  };
-
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-hidden">
@@ -229,7 +84,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/dashboard')}
                   className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   Access Cloud Dashboard
@@ -238,7 +93,7 @@ export default function HomePage() {
 
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
-                  onClick={startWorkflow}
+                  onClick={() => navigate('/wipe')}
                   className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-4 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   Run Web Simulator
@@ -296,11 +151,10 @@ export default function HomePage() {
                 Native hardware access application. Install directly to your operating system to securely wipe connected external drives and USBs.
               </p>
               <Button
-                onClick={() => {
-                  document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => navigate('/dashboard')}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 rounded-xl text-lg mt-auto"
               >
+                Get Agent via Dashboard
                 Download Agent
               </Button>
             </motion.div>
@@ -318,11 +172,10 @@ export default function HomePage() {
                 Bootable Linux environment. Flash to a USB to perform bare-metal data destruction on host computers, securely in air-gapped environments.
               </p>
               <Button
-                onClick={() => {
-                  document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => navigate('/dashboard')}
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-xl text-lg mt-auto"
               >
+                Get ISO via Dashboard
                 Download ISO
               </Button>
             </motion.div>
@@ -402,117 +255,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Unified Downloads Section */}
-      <DownloadOSSection />
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleAuthSuccess}
-      />
-
-      {workflowStarted && (
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          ref={workflowRef}
-        >
-          {/* Progress Steps */}
-          <section className="py-8 bg-white/50 backdrop-blur-sm border-y border-gray-100">
-            <div className="max-w-4xl mx-auto px-6">
-              <div className="flex items-center justify-between">
-                {steps.map((step, index) => (
-                  <div key={step.number} className="flex items-center">
-                    <motion.div
-                      className={`relative flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 ${currentStep >= step.number
-                        ? 'bg-green-600 border-green-600 text-white'
-                        : currentStep > step.number - 1
-                          ? 'bg-green-100 border-green-300 text-green-700'
-                          : 'bg-white border-gray-300 text-gray-400'
-                        }`}
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {currentStep > step.number ? (
-                        <CheckCircle className="w-6 h-6" />
-                      ) : (
-                        <span className="font-bold">{step.number}</span>
-                      )}
-                    </motion.div>
-                    <div className="ml-3 hidden sm:block">
-                      <p className={`text-sm font-semibold ${currentStep >= step.number ? 'text-green-700' : 'text-gray-500'
-                        }`}>
-                        {step.title}
-                      </p>
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div className={`hidden sm:block w-16 h-1 mx-4 rounded-full transition-all duration-300 ${currentStep > step.number ? 'bg-green-600' : 'bg-gray-200'
-                        }`} />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Main Workflow */}
-          <section className="py-16">
-            <div className="max-w-4xl mx-auto px-6">
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-8">
-                    {currentStep === 1 && (
-                      <DeviceSelector onSelect={handleDeviceSelect} />
-                    )}
-
-                    {currentStep === 2 && (
-                      <WipeMethodSelector
-                        deviceType={wipeData.deviceType}
-                        onSelect={handleMethodSelect}
-                      />
-                    )}
-
-                    {currentStep === 3 && (
-                      <CommandGenerator
-                        deviceType={wipeData.deviceType}
-                        os={wipeData.os}
-                        method={wipeData.wipeMethod}
-                        onGenerated={handleCommandGenerated}
-                        onExecuted={handleCommandExecuted}
-                      />
-                    )}
-
-                    {currentStep === 4 && (
-                      <ProofUpload
-                        wipeData={wipeData}
-                        onUploaded={handleProofUploaded}
-                        onReset={resetWorkflow}
-                      />
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Eco Tip */}
-              {currentStep > 1 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="mt-8"
-                >
-                  <EcoTip deviceType={wipeData.deviceType} />
-                </motion.div>
-              )}
-            </div>
-          </section>
-        </motion.div>
-      )}
+      {/* End of Marketing Sections */}
     </div>
   );
 }

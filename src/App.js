@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { WipeWorkflowProvider } from './context/WipeWorkflowContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -14,13 +15,12 @@ import AuthPage from './pages/AuthPage';
 // Marketing Pages
 import Home from './pages/Home';
 import DashboardPage from './pages/Dashboard';
+import UserProfile from './pages/UserProfile';
 import Features from './pages/Features';
 import TestimonialsPage from './pages/TestimonialsPage';
 import ComplianceGuide from './pages/ComplianceGuide';
 import FAQPage from './pages/FAQPage';
 import NotFound from './pages/NotFound';
-
-
 
 // Workflow Pages
 import WipeLanding from './pages/wipe/WipeLanding';
@@ -31,50 +31,53 @@ import ProofUploadPage from './pages/wipe/ProofUploadPage';
 
 function App() {
   return (
-    <Router basename="/e-waste">
-      <AuthProvider>
-        <WipeWorkflowProvider>
-          <Routes>
-            {/* Public Auth Route */}
-            <Route path="/login" element={<AuthPage />} />
+    <GoogleOAuthProvider clientId="197014643450-5gvp19crr5rsdkhuc2phfvb528cdh8e9.apps.googleusercontent.com">
+      <Router basename="/e-waste">
+        <AuthProvider>
+          <WipeWorkflowProvider>
+            <Routes>
+              {/* Public Auth Route */}
+              <Route path="/login" element={<AuthPage />} />
 
-            {/* Public Marketing Routes */}
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Home />} />
-              <Route path="features" element={<Features />} />
-              <Route path="testimonials" element={<TestimonialsPage />} />
-              <Route path="compliance" element={<ComplianceGuide />} />
-              <Route path="faq" element={<FAQPage />} />
-            </Route>
+              {/* Public Marketing Routes */}
+              <Route path="/" element={<MainLayout />}>
+                <Route index element={<Home />} />
+                <Route path="features" element={<Features />} />
+                <Route path="testimonials" element={<TestimonialsPage />} />
+                <Route path="compliance" element={<ComplianceGuide />} />
+                <Route path="faq" element={<FAQPage />} />
+              </Route>
 
-            {/* Protected Dashboard Routes */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            }>
-              <Route index element={<DashboardPage />} />
-            </Route>
+              {/* Protected Dashboard Routes */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<DashboardPage />} />
+                <Route path="profile" element={<UserProfile />} />
+              </Route>
 
-            {/* Protected Wipe Workflow */}
-            <Route path="/wipe" element={
-              <ProtectedRoute>
-                <WipeLayout />
-              </ProtectedRoute>
-            }>
-              <Route index element={<WipeLanding />} />
-              <Route path="device" element={<DeviceSelectionPage />} />
-              <Route path="method" element={<MethodSelectionPage />} />
-              <Route path="execute" element={<ExecuteCommandPage />} />
-              <Route path="proof" element={<ProofUploadPage />} />
-            </Route>
+              {/* Protected Wipe Workflow */}
+              <Route path="/wipe" element={
+                <ProtectedRoute>
+                  <WipeLayout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<WipeLanding />} />
+                <Route path="device" element={<DeviceSelectionPage />} />
+                <Route path="method" element={<MethodSelectionPage />} />
+                <Route path="execute" element={<ExecuteCommandPage />} />
+                <Route path="proof" element={<ProofUploadPage />} />
+              </Route>
 
-            {/* 404 Page */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </WipeWorkflowProvider>
-      </AuthProvider>
-    </Router >
+              {/* 404 Page */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </WipeWorkflowProvider>
+        </AuthProvider>
+      </Router >
+    </GoogleOAuthProvider>
   );
 }
 
