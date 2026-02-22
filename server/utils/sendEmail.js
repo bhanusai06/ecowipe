@@ -1,9 +1,17 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
+
+// Render sometimes has outbound IPv6 issues. This forces Node to prefer IPv4.
+if (dns.setDefaultResultOrder) {
+    dns.setDefaultResultOrder('ipv4first');
+}
 
 const sendEmail = async (email, subject, text) => {
     try {
         const transporter = nodemailer.createTransport({
-            service: 'gmail', // or your preferred service
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
                 user: process.env.EMAIL_USER, // e.g., 'your-email@gmail.com'
                 pass: process.env.EMAIL_PASS, // e.g., 'your-app-password'
