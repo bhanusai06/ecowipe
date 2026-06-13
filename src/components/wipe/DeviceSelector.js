@@ -11,6 +11,8 @@ import {
   ArrowRight
 } from "lucide-react";
 
+const storageOnlyTypes = ["hdd", "ssd", "usb"];
+
 const devices = [
   {
     type: "mobile",
@@ -18,6 +20,7 @@ const devices = [
     title: "Mobile Device",
     description: "Smartphones, tablets, and mobile devices",
     os: ["android"],
+    tags: ["Android"],
     color: "from-blue-500 to-cyan-500"
   },
   {
@@ -26,6 +29,7 @@ const devices = [
     title: "Laptop/PC",
     description: "Desktop computers and laptops",
     os: ["windows", "linux", "ubuntu"],
+    tags: ["Windows", "Linux", "Ubuntu"],
     color: "from-purple-500 to-indigo-500"
   },
   {
@@ -33,7 +37,8 @@ const devices = [
     icon: HardDrive,
     title: "Hard Disk Drive",
     description: "Traditional spinning hard drives",
-    os: ["windows", "linux", "ubuntu"],
+    os: ["HDD"],
+    tags: ["HDD"],
     color: "from-orange-500 to-red-500"
   },
   {
@@ -41,7 +46,8 @@ const devices = [
     icon: Monitor,
     title: "Solid State Drive",
     description: "Modern SSD storage devices",
-    os: ["windows", "linux", "ubuntu"],
+    os: ["SSD"],
+    tags: ["SSD"],
     color: "from-green-500 to-emerald-500"
   },
   {
@@ -49,7 +55,8 @@ const devices = [
     icon: Usb,
     title: "USB Storage",
     description: "Flash drives and external storage",
-    os: ["windows", "linux", "ubuntu"],
+    os: ["USB"],
+    tags: ["USB"],
     color: "from-pink-500 to-rose-500"
   }
 ];
@@ -110,12 +117,12 @@ export default function DeviceSelector({ onSelect }) {
                   {device.description}
                 </p>
                 <div className="flex flex-wrap gap-1 justify-center">
-                  {device.os.map((os) => (
+                  {(device.tags || device.os).map((tag) => (
                     <span
-                      key={os}
+                      key={tag}
                       className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium"
                     >
-                      {os.charAt(0).toUpperCase() + os.slice(1)}
+                      {tag}
                     </span>
                   ))}
                 </div>
@@ -132,7 +139,9 @@ export default function DeviceSelector({ onSelect }) {
           className="bg-green-50 rounded-2xl p-6 border border-green-200 mb-20 md:mb-0"
         >
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Select Operating System for {selectedDevice.title}
+            {storageOnlyTypes.includes(selectedDevice.type)
+              ? `Confirm: ${selectedDevice.title}`
+              : `Select Operating System for ${selectedDevice.title}`}
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {selectedDevice.os.map((os) => (

@@ -1,14 +1,19 @@
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+// Load from server's own .env first, fallback to root .env
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+if (!process.env.MONGODB_URI) {
+  require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+}
 
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
+    console.error(`MongoDB connection error: ${error.message}`);
+    console.warn('Server will continue running without database connection. Some features may not work.');
+    // Don't exit - let the server start so we can at least diagnose
   }
 };
 

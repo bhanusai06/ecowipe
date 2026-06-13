@@ -21,6 +21,7 @@ import TestimonialsPage from './pages/TestimonialsPage';
 import ComplianceGuide from './pages/ComplianceGuide';
 import FAQPage from './pages/FAQPage';
 import NotFound from './pages/NotFound';
+import LiveOSDownload from './pages/LiveOSDownload';
 
 // Workflow Pages
 import WipeLanding from './pages/wipe/WipeLanding';
@@ -31,7 +32,7 @@ import ProofUploadPage from './pages/wipe/ProofUploadPage';
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId="197014643450-5gvp19crr5rsdkhuc2phfvb528cdh8e9.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="242286394984-55c3dunikmueolkhuskfh3tsc980jess.apps.googleusercontent.com">
       <Router basename="/e-waste">
         <AuthProvider>
           <WipeWorkflowProvider>
@@ -46,6 +47,7 @@ function App() {
                 <Route path="testimonials" element={<TestimonialsPage />} />
                 <Route path="compliance" element={<ComplianceGuide />} />
                 <Route path="faq" element={<FAQPage />} />
+                <Route path="live-os-download" element={<LiveOSDownload />} />
               </Route>
 
               {/* Protected Dashboard Routes */}

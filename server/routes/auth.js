@@ -208,11 +208,11 @@ router.post('/google', async (req, res) => {
 
         // Create and assign a token
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET || 'fallback_secret');
-        res.header('auth-token', token).send({ token });
+        res.header('auth-token', token).json({ token, user });
 
     } catch (err) {
-        console.error('Google Auth error:', err);
-        res.status(400).send(err);
+        console.error('Google Auth error:', err.message || err);
+        res.status(400).json({ error: err.message || 'Google authentication failed' });
     }
 });
 

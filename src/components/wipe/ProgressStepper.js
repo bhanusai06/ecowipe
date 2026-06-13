@@ -1,12 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, Smartphone, Shield, Terminal, CloudUpload } from 'lucide-react';
+import { CheckCircle, Smartphone, Shield, Terminal } from 'lucide-react';
 
 const steps = [
     { number: 1, title: 'Select Device', icon: Smartphone },
     { number: 2, title: 'Choose Method', icon: Shield },
     { number: 3, title: 'Execute Wipe', icon: Terminal },
-    { number: 4, title: 'Upload Proof', icon: CloudUpload },
 ];
 
 const ProgressStepper = ({ currentStep }) => {
@@ -25,10 +24,10 @@ const ProgressStepper = ({ currentStep }) => {
                                 {/* Step Circle */}
                                 <motion.div
                                     className={`relative flex items-center justify-center rounded-full border-2 transition-all duration-300 ${isCompleted
-                                            ? 'h-12 w-12 border-green-600 bg-green-600 text-white'
-                                            : isCurrent
-                                                ? 'h-14 w-14 border-green-600 bg-green-50 text-green-700'
-                                                : 'h-12 w-12 border-gray-300 bg-white text-gray-400'
+                                        ? 'h-12 w-12 border-green-600 bg-green-600 text-white'
+                                        : isCurrent
+                                            ? 'h-14 w-14 border-green-600 bg-green-50 text-green-700'
+                                            : 'h-12 w-12 border-gray-300 bg-white text-gray-400'
                                         }`}
                                     whileHover={{ scale: 1.05 }}
                                     initial={{ scale: 0.8, opacity: 0 }}

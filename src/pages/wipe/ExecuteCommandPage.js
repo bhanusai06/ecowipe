@@ -19,7 +19,7 @@ const ExecuteCommandPage = () => {
 
     const handleExecuted = () => {
         confirmExecution();
-        navigate('/wipe/proof');
+        navigate('/wipe');
     };
 
     if (!deviceType || !os || !wipeMethod) return null;

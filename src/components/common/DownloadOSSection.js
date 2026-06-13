@@ -3,19 +3,27 @@ import { motion } from 'framer-motion';
 import { Terminal, Download, Shield, Cpu, Zap, Lock } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const DownloadOSSection = () => {
     const [isDownloading, setIsDownloading] = useState(false);
 
-    const handleDownload = () => {
+    const handleDownloadAgent = () => {
         setIsDownloading(true);
-        toast.loading('Initializing secure download...', { id: 'download-os' });
+        toast.loading('Starting download...', { id: 'agent-download' });
 
         setTimeout(() => {
-            toast.success('Download starting...', { id: 'download-os' });
+            const link = document.createElement('a');
+            link.href = '/Secure Device Manager.exe';
+            link.download = 'Secure Device Manager.exe';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            toast.success('Download started!', { id: 'agent-download' });
             setIsDownloading(false);
-        }, 1500);
+        }, 1000);
     };
 
     return (
@@ -55,7 +63,7 @@ const DownloadOSSection = () => {
                         <div className="flex flex-col sm:flex-row gap-4 mb-8">
                             {/* Desktop Agent Button */}
                             <Button
-                                onClick={handleDownload}
+                                onClick={handleDownloadAgent}
                                 disabled={isDownloading}
                                 className="h-14 px-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-base font-medium shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-3 transition-all flex-1"
                             >
@@ -76,18 +84,18 @@ const DownloadOSSection = () => {
                             </Button>
 
                             {/* Live OS Button */}
-                            <Button
-                                onClick={handleDownload}
-                                disabled={isDownloading}
-                                variant="outline"
-                                className="h-14 px-6 border-emerald-500/30 bg-emerald-900/20 text-emerald-400 hover:bg-emerald-900/40 hover:text-emerald-300 rounded-xl text-base font-medium flex items-center justify-center gap-3 transition-all flex-1"
-                            >
-                                <Download className="w-5 h-5" />
-                                <div className="flex flex-col items-start leading-none">
-                                    <span>Live OS</span>
-                                    <span className="text-xs opacity-70 font-normal">(.iso)</span>
-                                </div>
-                            </Button>
+                            <Link to="/live-os-download" className="flex-1">
+                                <Button
+                                    variant="outline"
+                                    className="h-14 w-full px-6 border-emerald-500/30 bg-emerald-900/20 text-emerald-400 hover:bg-emerald-900/40 hover:text-emerald-300 rounded-xl text-base font-medium flex items-center justify-center gap-3 transition-all"
+                                >
+                                    <Download className="w-5 h-5" />
+                                    <div className="flex flex-col items-start leading-none">
+                                        <span>Live OS</span>
+                                        <span className="text-xs opacity-70 font-normal">(.iso)</span>
+                                    </div>
+                                </Button>
+                            </Link>
                         </div>
 
                         <div className="mt-8 flex items-center gap-6 text-sm text-gray-500">

@@ -1,7 +1,7 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const AuthContext = createContext();
 
@@ -13,48 +13,60 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    // Fetch user profile from token
+    const fetchUser = useCallback(async (tkn) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
+                headers: { 'auth-token': tkn }
+            });
+            if (res.ok) {
+                const userData = await res.json();
+                setUser(userData);
+                return userData;
+            } else if (res.status === 401 || res.status === 403) {
+                // Token is invalid - clear it
+                localStorage.removeItem('auth-token');
+                setToken(null);
+                setUser(null);
+            }
+        } catch (err) {
+            console.error('Auth check failed:', err);
+            // Don't logout on network errors (server might be starting up)
+        }
+        return null;
+    }, []);
+
+    // On mount: validate stored token
     useEffect(() => {
         const checkLoggedIn = async () => {
-            if (token) {
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
-                        headers: { 'auth-token': token }
-                    });
-                    if (res.ok) {
-                        const userData = await res.json();
-                        setUser(userData);
-                    } else {
-                        logout();
-                    }
-                } catch (err) {
-                    console.error("Auth check failed:", err);
-                    logout();
-                }
+            const storedToken = localStorage.getItem('auth-token');
+            if (storedToken) {
+                await fetchUser(storedToken);
             }
             setLoading(false);
         };
-
         checkLoggedIn();
-    }, [token]);
+    }, [fetchUser]);
 
-    const login = (token, userData) => {
-        localStorage.setItem('auth-token', token);
-        setToken(token);
+    const login = useCallback(async (tkn, userData) => {
+        localStorage.setItem('auth-token', tkn);
+        setToken(tkn);
+        // Set user optimistically first so ProtectedRoute doesn't redirect
         setUser(userData);
+        // Then fetch the real/complete profile from server
+        const realUser = await fetchUser(tkn);
+        if (realUser) {
+            setUser(realUser);
+        }
         navigate('/dashboard');
-    };
+    }, [navigate, fetchUser]);
 
-    const logout = () => {
+    const logout = useCallback(() => {
         localStorage.removeItem('auth-token');
         setToken(null);
         setUser(null);
         navigate('/login');
-    };
-
-    // Register convenience method (just returns the fetch promise)
-    const register = async (email, password) => {
-        // Implementation handled in AuthPage usually, but could be centralized here
-    };
+    }, [navigate]);
 
     const value = {
         user,

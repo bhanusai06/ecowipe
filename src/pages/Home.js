@@ -21,9 +21,28 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import GeometricBackground from "../components/common/GeometricBackground";
 import { User } from "../entities/User";
+import toast from "react-hot-toast";
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const [isDownloadingAgent, setIsDownloadingAgent] = useState(false);
+
+  const handleDownloadAgent = () => {
+    setIsDownloadingAgent(true);
+    toast.loading('Starting download...', { id: 'agent-download' });
+
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.href = '/Secure Device Manager.exe';
+      link.download = 'Secure Device Manager.exe';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success('Download started!', { id: 'agent-download' });
+      setIsDownloadingAgent(false);
+    }, 1000);
+  };
 
   useEffect(() => {
     // Check if user is logged in
@@ -151,11 +170,18 @@ export default function HomePage() {
                 Native hardware access application. Install directly to your operating system to securely wipe connected external drives and USBs.
               </p>
               <Button
-                onClick={() => navigate('/dashboard')}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 rounded-xl text-lg mt-auto"
+                onClick={handleDownloadAgent}
+                disabled={isDownloadingAgent}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 rounded-xl text-lg mt-auto disabled:opacity-75 flex items-center justify-center gap-2"
               >
-                Get Agent via Dashboard
-                Download Agent
+                {isDownloadingAgent ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Downloading...
+                  </>
+                ) : (
+                  <>Download Agent</>
+                )}
               </Button>
             </motion.div>
 
@@ -172,7 +198,7 @@ export default function HomePage() {
                 Bootable Linux environment. Flash to a USB to perform bare-metal data destruction on host computers, securely in air-gapped environments.
               </p>
               <Button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/live-os-download')}
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-xl text-lg mt-auto"
               >
                 Get ISO via Dashboard

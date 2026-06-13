@@ -7,7 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import FloatingInput from '../components/FloatingInput';
 import { useAuth } from '../context/AuthContext';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const AuthPage = () => {
     // Modes: 'login', 'register', 'forgot'
@@ -226,13 +226,16 @@ const AuthPage = () => {
                 })
             });
 
-            if (!res.ok) throw new Error(await res.text());
             const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Google Sign-In failed');
 
-            login(data.token, { _id: 'google_temp' });
+            // Store token and login with real user data
+            localStorage.setItem('auth-token', data.token);
+            login(data.token, data.user || { _id: data.user?._id });
             setSuccess('Google Sign-In successful! Redirecting...');
         } catch (err) {
-            setError("Google Sign-In failed");
+            console.error('Google Sign-In error:', err);
+            setError(err.message || "Google Sign-In failed. Please try again.");
             setLoading(false);
         }
     };

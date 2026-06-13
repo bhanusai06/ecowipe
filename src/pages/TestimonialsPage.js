@@ -15,9 +15,9 @@ const TestimonialsPage = () => {
 
     const useCases = [
         {
-            title: 'Enterprise IT Departments',
-            description: 'Securely wipe devices before employee offboarding or equipment disposal',
-            icon: '🏢'
+            title: 'Small Scale Recyclers',
+            description: 'Certified data destruction for refurbished devices before resale or recycling',
+            icon: '♻️'
         },
         {
             title: 'Healthcare Organizations',

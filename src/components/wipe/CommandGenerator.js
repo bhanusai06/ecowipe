@@ -239,32 +239,13 @@ export default function CommandGenerator({ deviceType, os, method, onGenerated, 
               </div>
             </div>
 
-            <div className="text-center space-x-4">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl">
-                <Download className="w-4 h-4 mr-2" />
-                Download Instructions
-              </Button>
-
-              {/* Electron-only Auto Run Button */}
-              {window.api && (
-                <Button
-                  onClick={() => {
-                    window.api.runWipe(command);
-                    onExecuted(); // Move to next step immediately for demo
-                  }}
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <Terminal className="w-4 h-4 mr-2" />
-                  Run Automatically
-                </Button>
-              )}
-
+            <div className="text-center mt-8">
               <Button
                 onClick={onExecuted}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-auto"
-                style={{ animation: 'none' }}>
-                <span className="pointer-events-none">I've Executed the Command</span>
-                <ArrowRight className="ml-2 w-4 h-4 pointer-events-none" />
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <CheckCircle className="mr-2 w-5 h-5" />
+                Finish Wipe Process
               </Button>
             </div>
           </CardContent>

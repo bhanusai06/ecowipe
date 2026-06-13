@@ -7,10 +7,21 @@ dotenv.config();
 
 const app = express();
 
-// Handle uncaught exceptions
+// Handle uncaught exceptions (don't exit for DB-related errors)
 process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  process.exit(1);
+  console.error('Uncaught Exception:', err.message);
+  if (err.message && (err.message.includes('MongoDB') || err.message.includes('ENOTFOUND') || err.message.includes('querySrv'))) {
+    console.warn('Database connection error - server continues running without DB');
+  } else {
+    // Only exit for truly fatal non-DB errors
+    process.exit(1);
+  }
+});
+
+// Handle unhandled promise rejections (e.g. MongoDB DNS failure)
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection:', reason?.message || reason);
+  // Don't exit - let the server keep running
 });
 
 // Connect to MongoDB
@@ -42,16 +53,21 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
-
 // Routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/wipe-records', require('./routes/wipeRecords'));
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// Error handling middleware (MUST be after routes)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
 
 const PORT = process.env.PORT || 5001;
 
