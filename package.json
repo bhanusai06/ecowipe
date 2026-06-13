@@ -4,7 +4,7 @@
   "private": true,
   "description": "Secure data sanitization and device wiping platform",
   "author": "",
-  "homepage": "https://charan242726.github.io/e-waste",
+  "homepage": ".",
   "main": "public/electron.js",
   "scripts": {
     "start": "craco start",
