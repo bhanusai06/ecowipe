@@ -35,7 +35,8 @@ const allowedOrigins = [
   'http://127.0.0.1:5002',
   'https://srkr-cup.github.io',
   'https://charan242726.github.io',
-  process.env.FRONTEND_URL
+  process.env.FRONTEND_URL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null
 ].filter(Boolean);
 
 app.use(cors({
@@ -71,6 +72,10 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
