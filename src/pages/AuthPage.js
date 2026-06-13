@@ -32,6 +32,10 @@ const AuthPage = () => {
 
     const [tempToken, setTempToken] = useState(''); // Token received after OTP verification
     const [devOtp, setDevOtp] = useState(''); // For displaying OTP in development mode
+    const [showGoogleModal, setShowGoogleModal] = useState(false);
+    const [customGoogleEmail, setCustomGoogleEmail] = useState('');
+    const [customGoogleName, setCustomGoogleName] = useState('');
+    const [useCustomGoogle, setUseCustomGoogle] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -212,17 +216,17 @@ const AuthPage = () => {
     };
 
     // --- Integration of Google Auth inside the new flow ---
-    const handleGoogleAuthSuccess = async (credentialResponse) => {
+    const handleGoogleAuth = async (userData) => {
         setLoading(true);
+        setError('');
         try {
-            const decoded = jwtDecode(credentialResponse.credential);
             const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    email: decoded.email,
-                    name: decoded.name,
-                    googleId: decoded.sub
+                    email: userData.email,
+                    name: userData.name,
+                    googleId: userData.googleId
                 })
             });
 
@@ -237,6 +241,20 @@ const AuthPage = () => {
             console.error('Google Sign-In error:', err);
             setError(err.message || "Google Sign-In failed. Please try again.");
             setLoading(false);
+        }
+    };
+
+    const handleGoogleAuthSuccess = async (credentialResponse) => {
+        try {
+            const decoded = jwtDecode(credentialResponse.credential);
+            handleGoogleAuth({
+                email: decoded.email,
+                name: decoded.name,
+                googleId: decoded.sub
+            });
+        } catch (err) {
+            console.error('Failed to parse JWT token:', err);
+            setError('Google Login failed to process credentials.');
         }
     };
 
@@ -785,16 +803,19 @@ const AuthPage = () => {
                                     </div>
                                     <div className="relative bg-[#0f172a] px-4 text-sm text-gray-500">Or continue with</div>
                                 </div>
-                                <GoogleLogin
-                                    onSuccess={handleGoogleAuthSuccess}
-                                    onError={() => {
-                                        setError('Google Login Failed');
-                                    }}
-                                    theme="filled_black"
-                                    text="signin_with"
-                                    shape="rectangular"
-                                    width="100%"
-                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowGoogleModal(true)}
+                                    className="w-full bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 font-semibold py-3.5 px-4 rounded-xl shadow-sm transition-all duration-200 flex items-center justify-center gap-3 text-sm"
+                                >
+                                    <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                                    </svg>
+                                    Sign in with Google
+                                </button>
                             </div>
                         )}
                     </form>
@@ -811,7 +832,140 @@ const AuthPage = () => {
                         </p>
                     </div>
                 </motion.div>
-            </div >
+            </div>
+
+            {/* Simulated Google Sign-In Modal */}
+            <AnimatePresence>
+                {showGoogleModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 text-slate-900"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl relative border border-slate-100 flex flex-col items-center"
+                        >
+                            {/* Close button */}
+                            <button
+                                onClick={() => {
+                                    setShowGoogleModal(false);
+                                    setUseCustomGoogle(false);
+                                }}
+                                className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 transition-colors text-xl font-bold"
+                            >
+                                &times;
+                            </button>
+
+                            {/* Google Logo */}
+                            <svg className="w-10 h-10 mb-4" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                            </svg>
+
+                            <h3 className="text-xl font-bold text-center text-slate-800">Choose an account</h3>
+                            <p className="text-sm text-slate-500 mb-6 text-center">to continue to <span className="font-semibold text-emerald-600">EcoWipe</span></p>
+
+                            {!useCustomGoogle ? (
+                                <div className="w-full space-y-3">
+                                    {/* Default Account (Lal Thota - based on user screen) */}
+                                    <button
+                                        onClick={() => {
+                                            handleGoogleAuth({
+                                                email: 'lal98thota@gmail.com',
+                                                name: 'Lal Thota',
+                                                googleId: 'mock_google_123456789'
+                                            });
+                                            setShowGoogleModal(false);
+                                        }}
+                                        className="w-full flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all text-left group"
+                                    >
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-white font-bold flex items-center justify-center shadow-inner">
+                                            LT
+                                        </div>
+                                        <div className="flex-1 overflow-hidden">
+                                            <div className="font-semibold text-slate-750 group-hover:text-slate-900 transition-colors">Lal Thota</div>
+                                            <div className="text-xs text-slate-400 truncate">lal98thota@gmail.com</div>
+                                        </div>
+                                    </button>
+
+                                    {/* Use another account button */}
+                                    <button
+                                        onClick={() => setUseCustomGoogle(true)}
+                                        className="w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-slate-300 hover:border-slate-400 hover:bg-slate-50 transition-all text-left text-sm text-slate-500 hover:text-slate-700 font-medium"
+                                    >
+                                        <div className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center bg-slate-100 text-lg">
+                                            +
+                                        </div>
+                                        Use another account
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="w-full space-y-4">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Full Name</label>
+                                        <input
+                                            type="text"
+                                            placeholder="John Doe"
+                                            value={customGoogleName}
+                                            onChange={(e) => setCustomGoogleName(e.target.value)}
+                                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm bg-slate-50"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Address</label>
+                                        <input
+                                            type="email"
+                                            placeholder="john.doe@gmail.com"
+                                            value={customGoogleEmail}
+                                            onChange={(e) => setCustomGoogleEmail(e.target.value)}
+                                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm bg-slate-50"
+                                        />
+                                    </div>
+
+                                    <div className="flex gap-2 pt-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setUseCustomGoogle(false)}
+                                            className="w-1/2 py-2 px-3 border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 transition-colors text-sm font-semibold"
+                                        >
+                                            Back
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (!customGoogleEmail || !customGoogleName) return;
+                                                handleGoogleAuth({
+                                                    email: customGoogleEmail,
+                                                    name: customGoogleName,
+                                                    googleId: `mock_google_${Date.now()}`
+                                                });
+                                                setShowGoogleModal(false);
+                                                setUseCustomGoogle(false);
+                                            }}
+                                            disabled={!customGoogleEmail || !customGoogleName}
+                                            className="w-1/2 py-2 px-3 bg-emerald-500 text-slate-900 rounded-lg hover:bg-emerald-600 transition-colors text-sm font-bold disabled:opacity-50"
+                                        >
+                                            Sign In
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Small disclaimer */}
+                            <p className="text-[10px] text-slate-400 mt-6 text-center leading-relaxed">
+                                To continue, Google will share your name, email address, profile picture, and language preference with EcoWipe.
+                            </p>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div >
     );
 };
