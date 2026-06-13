@@ -33,7 +33,7 @@ import ProofUploadPage from './pages/wipe/ProofUploadPage';
 function App() {
   return (
     <GoogleOAuthProvider clientId="242286394984-55c3dunikmueolkhuskfh3tsc980jess.apps.googleusercontent.com">
-      <Router basename="/e-waste">
+      <Router basename={process.env.PUBLIC_URL || "/"}>
         <AuthProvider>
           <WipeWorkflowProvider>
             <Routes>
