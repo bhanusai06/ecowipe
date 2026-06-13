@@ -32,7 +32,7 @@ import ProofUploadPage from './pages/wipe/ProofUploadPage';
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId="242286394984-55c3dunikmueolkhuskfh3tsc980jess.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || "242286394984-55c3dunikmueolkhuskfh3tsc980jess.apps.googleusercontent.com"}>
       <Router basename={process.env.PUBLIC_URL || "/"}>
         <AuthProvider>
           <WipeWorkflowProvider>
