@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import TrustBadges from '../components/common/TrustBadges';
-import DownloadOSSection from '../components/common/DownloadOSSection';
 import { Shield, Zap, Lock, Award, Check, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
 

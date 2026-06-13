@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
-import { Shield, ArrowRight, RefreshCcw } from 'lucide-react';
+import { Shield, ArrowRight } from 'lucide-react';
 import { useWipeWorkflow } from '../../context/WipeWorkflowContext';
 
 const WipeLanding = () => {

@@ -1,26 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
-import { Card, CardContent } from "../components/ui/card";
 import {
   Shield,
   Leaf,
   Award,
   ArrowRight,
   CheckCircle,
-  Smartphone,
-  Laptop,
-  HardDrive,
-  Usb,
   FileText,
   Cloud,
   Terminal,
   Cpu
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "../utils";
 import GeometricBackground from "../components/common/GeometricBackground";
-import { User } from "../entities/User";
 import toast from "react-hot-toast";
 
 export default function HomePage() {
