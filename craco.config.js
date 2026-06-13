@@ -7,13 +7,15 @@ module.exports = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
-      const eslintPlugin = new ESLintPlugin({
-        extensions: ['js', 'jsx'],
-        fix: true,
-        emitWarning: true,
-        emitError: false
-      });
-      webpackConfig.plugins.push(eslintPlugin);
+      if (process.env.DISABLE_ESLINT_PLUGIN !== 'true') {
+        const eslintPlugin = new ESLintPlugin({
+          extensions: ['js', 'jsx'],
+          fix: true,
+          emitWarning: true,
+          emitError: false
+        });
+        webpackConfig.plugins.push(eslintPlugin);
+      }
       return webpackConfig;
     }
   }
