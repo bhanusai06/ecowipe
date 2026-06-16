@@ -35,6 +35,8 @@ const allowedOrigins = [
   'http://127.0.0.1:5002',
   'https://srkr-cup.github.io',
   'https://charan242726.github.io',
+  'https://ecowipe-alpha.vercel.app',
+  'https://ecowipe.vercel.app',
   process.env.FRONTEND_URL,
   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null
 ].filter(Boolean);
@@ -42,10 +44,17 @@ const allowedOrigins = [
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS policy violation'), false);
+    
+    // Check if the origin matches any allowed pattern
+    const isAllowed = allowedOrigins.indexOf(origin) !== -1 || 
+                     origin.endsWith('.vercel.app');
+
+    if (isAllowed) {
+      return callback(null, true);
+    } else {
+      console.warn(`CORS Rejected Origin: ${origin}`);
+      return callback(new Error(`CORS policy violation: ${origin} is not allowed`), false);
     }
-    return callback(null, true);
   },
   credentials: true
 }));
