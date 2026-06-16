@@ -7,7 +7,9 @@ import { jwtDecode } from 'jwt-decode';
 import FloatingInput from '../components/FloatingInput';
 import { useAuth } from '../context/AuthContext';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL !== undefined 
+    ? process.env.REACT_APP_API_URL 
+    : (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
 
 const AuthPage = () => {
     // Modes: 'login', 'register', 'forgot'
