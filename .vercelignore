@@ -1,0 +1,8 @@
+node_modules/
+server/node_modules/
+public/ecowipe.iso
+public/Secure Device Manager.exe
+build/
+dist/
+.git/
+.vercel/
