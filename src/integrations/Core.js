@@ -1,6 +1,6 @@
 const API_BASE_URL = process.env.REACT_APP_API_URL !== undefined 
   ? process.env.REACT_APP_API_URL 
-  : (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5001');
+  : (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
 
 export async function List(path) {
   const response = await fetch(`${API_BASE_URL}${path}`);
